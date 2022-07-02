@@ -1,3 +1,4 @@
+use async_graphql::SimpleObject;
 use diesel::Queryable;
 use once_cell::sync::Lazy;
 use std::sync::Mutex;
@@ -6,7 +7,7 @@ use std::sync::Mutex;
 #[allow(dead_code)]
 static SEQUENCE_ID: Lazy<Mutex<i32>> = Lazy::new(|| Mutex::new(0));
 
-#[derive(Queryable)]
+#[derive(Queryable, SimpleObject, Clone)]
 pub struct Todo {
     pub id: i32,
     pub title: String,
