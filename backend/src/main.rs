@@ -70,7 +70,7 @@ async fn main() -> std::io::Result<()> {
     let schema = Schema::build(Query, Mutation, EmptySubscription).finish();
 
     println!("listen ...");
-    println!("http://127.0.0.1:8080");
+    println!("http://127.0.0.1:4000");
 
     HttpServer::new(move || {
         App::new()
