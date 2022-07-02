@@ -16,13 +16,13 @@ impl TodoRepository<'_> {
         TodoRepository { connection }
     }
 
-    pub fn insert(&self) -> Result<usize, Error> {
+    pub fn insert(&self, _title: &str, _description: &str) -> Result<usize, Error> {
         use crate::schema::todos::dsl::*;
         insert_into(todos)
             .values((
                 id.eq(1),
-                title.eq("My first todo"),
-                description.eq("This is my first todo"),
+                title.eq(_title),
+                description.eq(_description),
                 is_done.eq(false),
             ))
             .execute(self.connection)
