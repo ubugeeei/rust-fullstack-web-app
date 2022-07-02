@@ -3,7 +3,7 @@ use once_cell::sync::Lazy;
 use std::sync::Mutex;
 
 // TODO: unique
-static SEQUENCE_ID: Lazy<Mutex<usize>> = Lazy::new(|| Mutex::new(0));
+static SEQUENCE_ID: Lazy<Mutex<i32>> = Lazy::new(|| Mutex::new(0));
 
 #[derive(Queryable)]
 pub struct Todo {
