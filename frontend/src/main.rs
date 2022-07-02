@@ -1,6 +1,6 @@
 use yew::prelude::*;
 pub mod root;
-use crate::root::todo::components::TodoCard::TodoCard;
+use crate::root::todo::components::todo_card::TodoCard;
 use root::todo::entities::Todo;
 
 #[function_component(App)]
