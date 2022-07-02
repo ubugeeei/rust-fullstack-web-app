@@ -10,7 +10,7 @@ stop:
 	lsof -i:8080 -t | xargs kill
 
 orm_setup:
-	diesel setup --database-url ./db/sample.db
+	mkdir -p db && diesel setup --database-url ./db/sample.db
 
 orm_generate:
 	mkdir -p db && diesel migration generate ${MIGRATE_ARG} --database-url ./db/sample.db
