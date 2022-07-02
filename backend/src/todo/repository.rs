@@ -1,4 +1,4 @@
-use crate::{diesel::RunQueryDsl, todo::entities::Todo};
+use crate::{diesel::RunQueryDsl, todo::entities::ORMTodo};
 use diesel::{insert_into, prelude::*, result::Error, SqliteConnection};
 use nanoid::nanoid;
 
@@ -30,8 +30,8 @@ impl TodoRepository {
             .execute(connection)
     }
 
-    pub fn select_all(&self, connection: &SqliteConnection) -> Result<Vec<Todo>, Error> {
+    pub fn select_all(&self, connection: &SqliteConnection) -> Result<Vec<ORMTodo>, Error> {
         use crate::schema::todos::dsl::*;
-        todos.load::<Todo>(connection)
+        todos.load::<ORMTodo>(connection)
     }
 }

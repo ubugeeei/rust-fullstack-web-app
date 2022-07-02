@@ -14,7 +14,7 @@ use std::env;
 
 pub mod schema;
 pub mod todo;
-use todo::{entities::Todo, repository::TodoRepository};
+use todo::{entities::Todo, factory::TodoFactory, repository::TodoRepository};
 
 pub fn establish_connection() -> SqliteConnection {
     dotenv().ok();
@@ -32,8 +32,11 @@ impl Query {
         let connection = establish_connection();
         let todo_repo = TodoRepository::new();
         let res = todo_repo.select_all(&connection);
+
+        let todo_factory = TodoFactory::new();
+
         match res {
-            Ok(todos) => todos,
+            Ok(todos) => todo_factory.make_todos(todos),
             Err(e) => panic!("Error selecting all todos: {:?}", e),
         }
     }
