@@ -19,7 +19,7 @@ orm_migrate:
 	mkdir -p db && diesel migration run --database-url ./db/sample.db
 
 orm_revert:
-	diesel migration revert --database-url ./db/sample.db
+	mkdir -p db && diesel migration revert --database-url ./db/sample.db
 
 orm_remigrate:
 	make orm_revert
