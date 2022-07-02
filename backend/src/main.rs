@@ -2,7 +2,7 @@ use std::env;
 
 use diesel::{Connection, SqliteConnection};
 use dotenv::dotenv;
-use todo::repository::TodoRepositoryFactory;
+use todo::repository::TodoRepository;
 
 #[macro_use]
 extern crate diesel;
@@ -23,16 +23,16 @@ pub fn establish_connection() -> SqliteConnection {
 
 fn main() {
     let connection = establish_connection();
-    let todo_repo = TodoRepositoryFactory::make(&connection);
+    let todo_repo = TodoRepository::new();
 
-    let insert_res = todo_repo.insert("new todo", "some description");
+    let insert_res = todo_repo.insert(&connection, "new todo", "some description");
 
     match insert_res {
         Ok(_) => println!("Inserted a new todo!"),
         Err(e) => println!("Error inserting a new todo: {:?}", e),
     }
 
-    let res = todo_repo.select_all();
+    let res = todo_repo.select_all(&connection);
     match res {
         Ok(todos) => {
             for todo in todos {

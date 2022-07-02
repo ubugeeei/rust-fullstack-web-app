@@ -1,22 +1,19 @@
 use crate::{diesel::RunQueryDsl, todo::entities::Todo};
 use diesel::{insert_into, prelude::*, result::Error, SqliteConnection};
 
-pub struct TodoRepositoryFactory;
-impl TodoRepositoryFactory {
-    pub fn make(connection: &SqliteConnection) -> TodoRepository {
-        TodoRepository::new(&connection)
-    }
-}
+pub struct TodoRepository;
 
-pub struct TodoRepository<'a> {
-    connection: &'a SqliteConnection,
-}
-impl TodoRepository<'_> {
-    fn new(connection: &SqliteConnection) -> TodoRepository {
-        TodoRepository { connection }
+impl TodoRepository {
+    pub fn new() -> Self {
+        TodoRepository
     }
 
-    pub fn insert(&self, _title: &str, _description: &str) -> Result<usize, Error> {
+    pub fn insert(
+        &self,
+        connection: &SqliteConnection,
+        _title: &str,
+        _description: &str,
+    ) -> Result<usize, Error> {
         use crate::schema::todos::dsl::*;
         insert_into(todos)
             .values((
@@ -25,11 +22,11 @@ impl TodoRepository<'_> {
                 description.eq(_description),
                 is_done.eq(false),
             ))
-            .execute(self.connection)
+            .execute(connection)
     }
 
-    pub fn select_all(&self) -> Result<Vec<Todo>, Error> {
+    pub fn select_all(&self, connection: &SqliteConnection) -> Result<Vec<Todo>, Error> {
         use crate::schema::todos::dsl::*;
-        todos.load::<Todo>(self.connection)
+        todos.load::<Todo>(connection)
     }
 }
