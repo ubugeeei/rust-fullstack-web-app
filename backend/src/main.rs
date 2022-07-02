@@ -9,7 +9,6 @@ extern crate diesel;
 
 pub mod schema;
 
-pub mod bootstrap;
 pub mod todo;
 
 pub fn establish_connection() -> SqliteConnection {
