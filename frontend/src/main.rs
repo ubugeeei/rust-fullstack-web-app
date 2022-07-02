@@ -1,11 +1,7 @@
 use yew::prelude::*;
-
-pub struct Todo {
-    pub id: i32,
-    pub title: String,
-    pub description: String,
-    pub is_done: bool,
-}
+pub mod root;
+use crate::root::todo::components::TodoCard::TodoCard;
+use root::todo::entities::Todo;
 
 #[function_component(App)]
 fn app() -> Html {
@@ -22,6 +18,12 @@ fn app() -> Html {
                 id: 2,
                 title: "Learn Yew".to_string(),
                 description: "Learn Yew".to_string(),
+                is_done: true,
+            },
+            Todo {
+                id: 3,
+                title: "Learn Diesel".to_string(),
+                description: "Learn Diesel".to_string(),
                 is_done: false,
             },
         ]
@@ -30,18 +32,15 @@ fn app() -> Html {
     html! {
         <div>
             <h1>{ "Todo App !" }</h1>
-            <ul>{ todos
-                .iter()
-                .map(|todo| {
-                    html! {
-                        <li>
-                            <h2>{todo.title.to_string()}</h2>
-                            <p>{ todo.description.to_string() }</p>
-                            <p>{ todo.is_done.to_string() }</p>
-                        </li>
-                    }
-                })
-                .collect::<Html>() }</ul>
+            <ul>
+                {
+                    todos.iter()
+                    .map(|todo| html! {
+                        <TodoCard todo={todo.clone()} />
+                    })
+                    .collect::<Html>()
+                }
+            </ul>
         </div>
     }
 }
