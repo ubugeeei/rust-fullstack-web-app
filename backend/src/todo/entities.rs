@@ -3,6 +3,7 @@ use once_cell::sync::Lazy;
 use std::sync::Mutex;
 
 // TODO: unique
+#[allow(dead_code)]
 static SEQUENCE_ID: Lazy<Mutex<i32>> = Lazy::new(|| Mutex::new(0));
 
 #[derive(Queryable)]
@@ -14,6 +15,7 @@ pub struct Todo {
 }
 
 impl Todo {
+    #[allow(dead_code)]
     fn new(title: String, description: Option<String>) -> Todo {
         let mut id = SEQUENCE_ID.lock().unwrap();
         *id += 1;
