@@ -1,6 +1,8 @@
 #[macro_use]
 extern crate diesel;
+use actix_cors::Cors;
 use actix_web::{guard, web, web::Data, App, HttpResponse, HttpServer, Result};
+
 use async_graphql::{
     http::{playground_source, GraphQLPlaygroundConfig},
     EmptySubscription, Object, Schema,
@@ -73,12 +75,17 @@ async fn main() -> std::io::Result<()> {
     println!("http://127.0.0.1:4000");
 
     HttpServer::new(move || {
+        let cors = Cors::default()
+            .allowed_origin("http://127.0.0.1:8080")
+            .allowed_methods(vec!["GET", "POST"]);
+
         App::new()
-            .app_data(Data::new(schema.clone()))
+        .wrap(cors)
+        .app_data(Data::new(schema.clone()))
             .service(web::resource("/").guard(guard::Post()).to(index))
             .service(web::resource("/").guard(guard::Get()).to(index_playground))
     })
-    .bind("127.0.0.1:8080")?
+    .bind("127.0.0.1:4000")?
     .run()
     .await
 }

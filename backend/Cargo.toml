@@ -7,9 +7,10 @@ edition = "2021"
 
 [dependencies]
 diesel = { version = "1.4.0", features = ["sqlite"] }
+actix-web = "4"
+actix-cors = "0"
 async-graphql = "4"
 async-graphql-actix-web = "4"
-actix-web = "4"
 once_cell = "1"
 dotenv = "0.15"
 nanoid = "0.4.0"

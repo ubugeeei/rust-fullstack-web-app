@@ -7,7 +7,7 @@ start:
 	cargo run &
 
 stop:
-	lsof -i:8080 -t | xargs kill
+	lsof -i:4000 -t | xargs kill
 
 orm_setup:
 	mkdir -p db && diesel setup --database-url ./db/sample.db
