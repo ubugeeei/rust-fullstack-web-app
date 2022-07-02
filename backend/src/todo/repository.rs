@@ -1,5 +1,6 @@
 use crate::{diesel::RunQueryDsl, todo::entities::Todo};
 use diesel::{insert_into, prelude::*, result::Error, SqliteConnection};
+use nanoid::nanoid;
 
 pub struct TodoRepository;
 
@@ -15,9 +16,13 @@ impl TodoRepository {
         _description: &str,
     ) -> Result<usize, Error> {
         use crate::schema::todos::dsl::*;
+        let _id = nanoid!(9, &['1', '2', '3', '4', '5', '6', '7', '8', '9'])
+            .parse::<i32>()
+            .unwrap();
+
         insert_into(todos)
             .values((
-                id.eq(1),
+                id.eq(_id),
                 title.eq(_title),
                 description.eq(_description),
                 is_done.eq(false),
