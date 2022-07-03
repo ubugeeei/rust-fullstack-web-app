@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate diesel;
 use actix_cors::Cors;
-use actix_web::{guard, web, web::Data, App, HttpResponse, HttpServer, Result};
+use actix_web::{guard, http, web, web::Data, App, HttpResponse, HttpServer, Result};
 
 use async_graphql::{
     http::{playground_source, GraphQLPlaygroundConfig},
@@ -47,7 +47,10 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         let cors = Cors::default()
             .allowed_origin("http://127.0.0.1:8080")
-            .allowed_methods(vec!["GET", "POST"]);
+            .allowed_origin_fn(|origin, _req_head| origin.as_bytes().ends_with(b".rust-lang.org"))
+            .allowed_methods(vec!["GET", "POST", "OPTIONS"])
+            .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
+            .allowed_header(http::header::CONTENT_TYPE);
 
         App::new()
             .wrap(cors)
