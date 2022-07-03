@@ -1,4 +1,4 @@
-use root::todo::repository::TodoRepository;
+use root::todo::repository::{create_todo_mutation, TodoRepository};
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
@@ -12,30 +12,6 @@ use crate::root::todo::repository::get_todos_query::{self, GetTodosQueryGetTodos
 fn app() -> Html {
     let todos: UseStateHandle<Vec<GetTodosQueryGetTodos>> = use_state(|| vec![]);
 
-    /*
-     * create
-     */
-    // form state
-    let new_title = use_state(|| "".to_string());
-    let on_change_new_title = {
-        let new_title = new_title.clone();
-        Callback::from(move |e: Event| {
-            let input: HtmlInputElement = e.target_unchecked_into();
-            new_title.set(input.value());
-        })
-    };
-
-    let new_description = use_state(|| "".to_string());
-    let on_change_new_description = {
-        let new_description = new_description.clone();
-        Callback::from(move |e: Event| {
-            let input: HtmlInputElement = e.target_unchecked_into();
-            new_description.set(input.value());
-        })
-    };
-
-    let create_todo = { Callback::from(move |e: Event| {}) };
-
     // dialog state
     let is_opened_create_dialog = use_state(|| false);
     let open_create_dialog = {
@@ -47,6 +23,45 @@ fn app() -> Html {
     let close_create_dialog = {
         let is_opened_create_dialog = is_opened_create_dialog.clone();
         Callback::from(move |_| {
+            is_opened_create_dialog.set(false);
+        })
+    };
+
+    /*
+     * create
+     */
+    // form state
+    // title
+    let new_title = use_state(|| "".to_string());
+    let on_change_new_title = {
+        let new_title = new_title.clone();
+        Callback::from(move |e: Event| {
+            let input: HtmlInputElement = e.target_unchecked_into();
+            new_title.set(input.value());
+        })
+    };
+    // description
+    let new_description = use_state(|| "".to_string());
+    let on_change_new_description = {
+        let new_description = new_description.clone();
+        Callback::from(move |e: Event| {
+            let input: HtmlInputElement = e.target_unchecked_into();
+            new_description.set(input.value());
+        })
+    };
+    // create mutation
+    let create_todo = {
+        let new_title = new_title.clone();
+        let new_description = new_description.clone();
+        let is_opened_create_dialog = is_opened_create_dialog.clone();
+        Callback::from(move |_| {
+            let variables = create_todo_mutation::Variables {
+                title: new_title.to_string(),
+                description: new_description.to_string(),
+            };
+            wasm_bindgen_futures::spawn_local(async move {
+                TodoRepository::create(variables).await;
+            });
             is_opened_create_dialog.set(false);
         })
     };
@@ -94,7 +109,7 @@ fn app() -> Html {
                     />
                 </div>
                 <button type="button" onclick={close_create_dialog}>{"cancel"}</button>
-                <button type="button">{"create"}</button>
+                <button type="button" onclick={create_todo}>{"create"}</button>
             </dialog>
 
             <ul>
