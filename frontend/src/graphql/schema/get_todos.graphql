@@ -1,0 +1,17 @@
+query GetTodosQuery {
+	getTodos {
+		id
+		title
+		description
+		isDone
+	}
+}
+
+# mutation createTodo($title: String!, $description: String!) {
+# 	createTodo(title: $title, description: $description) {
+# 		# id
+# 		title
+# 		# description
+# 		# isDone
+# 	}
+# }
