@@ -4,16 +4,16 @@ use std::error::Error;
 
 #[derive(GraphQLQuery)]
 #[graphql(
-    schema_path = "src/graphql/schema/schema.graphql",
-    query_path = "src/graphql/schema/get_todos.graphql",
+    schema_path = "src/graphql/schema.graphql",
+    query_path = "src/graphql/todo/get_todos.graphql",
     response_derives = "Serialize,PartialEq,Clone"
 )]
 pub struct GetTodosQuery;
 
 #[derive(GraphQLQuery)]
 #[graphql(
-    schema_path = "src/graphql/schema/schema.graphql",
-    query_path = "src/graphql/schema/create_todo.graphql",
+    schema_path = "src/graphql/schema.graphql",
+    query_path = "src/graphql/todo/create_todo.graphql",
     response_derives = "Serialize,PartialEq,Clone"
 )]
 pub struct CreateTodoMutation;

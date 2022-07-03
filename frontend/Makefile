@@ -4,6 +4,6 @@ start:
 stop:
 	lsof -i:8080 -t | xargs kill
 
-SCHEMA = get_todo
+SCHEMA = hoge
 codegen:
-	graphql-client generate --schema-path src/graphql/schema/schema.graphql src/graphql/schema/$(SCHEMA).graphql
+	graphql-client generate --schema-path src/graphql/schema.graphql src/graphql/$(SCHEMA).graphql
