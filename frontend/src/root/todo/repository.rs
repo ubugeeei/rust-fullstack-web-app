@@ -18,6 +18,22 @@ pub struct GetTodosQuery;
 )]
 pub struct CreateTodoMutation;
 
+#[derive(GraphQLQuery)]
+#[graphql(
+    schema_path = "src/graphql/schema.graphql",
+    query_path = "src/graphql/todo/complete_todo.graphql",
+    response_derives = "Serialize,PartialEq,Clone"
+)]
+pub struct CompleteTodoMutation;
+
+#[derive(GraphQLQuery)]
+#[graphql(
+    schema_path = "src/graphql/schema.graphql",
+    query_path = "src/graphql/todo/incomplete_todo.graphql",
+    response_derives = "Serialize,PartialEq,Clone"
+)]
+pub struct IncompleteTodoMutation;
+
 pub struct TodoRepository;
 impl TodoRepository {
     pub async fn get(
@@ -46,6 +62,34 @@ impl TodoRepository {
             .send()
             .await?;
 
+        Ok(())
+    }
+
+    pub async fn complete(
+        variables: complete_todo_mutation::Variables,
+    ) -> Result<(), Box<dyn Error>> {
+        let request_body = CompleteTodoMutation::build_query(variables);
+
+        let client = reqwest::Client::new();
+        client
+            .post("http://127.0.0.1:4000")
+            .json(&request_body)
+            .send()
+            .await?;
+        Ok(())
+    }
+
+    pub async fn incomplete(
+        variables: incomplete_todo_mutation::Variables,
+    ) -> Result<(), Box<dyn Error>> {
+        let request_body = IncompleteTodoMutation::build_query(variables);
+
+        let client = reqwest::Client::new();
+        client
+            .post("http://127.0.0.1:4000")
+            .json(&request_body)
+            .send()
+            .await?;
         Ok(())
     }
 }
