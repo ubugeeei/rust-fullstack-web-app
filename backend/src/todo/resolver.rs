@@ -28,4 +28,22 @@ impl Mutation {
         );
         todo_service.create_todo(title, description)
     }
+
+    async fn complete_todo(&self, id: i32) -> bool {
+        let todo_service = TodoService::new(
+            establish_connection(),
+            TodoRepository::new(),
+            TodoFactory::new(),
+        );
+        todo_service.complete_todo(id)
+    }
+
+    async fn incomplete_todo(&self, id: i32) -> bool {
+        let todo_service = TodoService::new(
+            establish_connection(),
+            TodoRepository::new(),
+            TodoFactory::new(),
+        );
+        todo_service.incomplete_todo(id)
+    }
 }
