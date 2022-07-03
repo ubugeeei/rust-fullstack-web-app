@@ -1,2 +1,2 @@
 pub mod components;
-pub mod queries;
+pub mod repository;

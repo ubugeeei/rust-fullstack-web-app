@@ -1,3 +1,4 @@
+use root::todo::repository::TodoRepository;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
@@ -5,8 +6,7 @@ mod graphql;
 
 pub mod root;
 use crate::root::todo::components::todo_card::TodoCard;
-use crate::root::todo::queries::get_todos_query::{self, GetTodosQueryGetTodos};
-use root::todo::queries::get_todos;
+use crate::root::todo::repository::get_todos_query::{self, GetTodosQueryGetTodos};
 
 #[function_component(App)]
 fn app() -> Html {
@@ -60,7 +60,7 @@ fn app() -> Html {
             move |_| {
                 let todos = todos.clone();
                 wasm_bindgen_futures::spawn_local(async move {
-                    let res = get_todos(get_todos_query::Variables {})
+                    let res = TodoRepository::get(get_todos_query::Variables {})
                         .await
                         .unwrap()
                         .get_todos;
