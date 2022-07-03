@@ -11,4 +11,6 @@ type Query {
 
 type Mutation {
 	createTodo(title: String!, description: String!): Boolean!
+	completeTodo(id: Int!): Boolean!
+	incompleteTodo(id: Int!): Boolean!
 }

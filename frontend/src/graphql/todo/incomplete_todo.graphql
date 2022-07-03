@@ -1,0 +1,3 @@
+mutation IncompleteTodoMutation($id: Int!) {
+	incompleteTodo(id: $id)
+}
