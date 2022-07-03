@@ -1,9 +1,9 @@
-use crate::root::todo::entities::Todo;
+use crate::graphql::get_todos::get_todos_query::GetTodosQueryGetTodos;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq)]
 pub struct TodoCardProps {
-    pub todo: Todo,
+    pub todo: GetTodosQueryGetTodos,
 }
 
 #[function_component(TodoCard)]
