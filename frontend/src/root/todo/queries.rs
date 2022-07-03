@@ -10,7 +10,7 @@ use std::error::Error;
 )]
 pub struct GetTodosQuery;
 
-pub async fn perform_my_query(
+pub async fn get_todos(
     variables: get_todos_query::Variables,
 ) -> Result<get_todos_query::ResponseData, Box<dyn Error>> {
     let request_body = GetTodosQuery::build_query(variables);
