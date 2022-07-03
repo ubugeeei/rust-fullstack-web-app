@@ -6,9 +6,9 @@ use std::error::Error;
 #[graphql(
     schema_path = "src/graphql/schema/schema.graphql",
     query_path = "src/graphql/schema/get_todos.graphql",
-    response_derives = "Serialize,PartialEq"
+    response_derives = "Serialize,PartialEq,Clone"
 )]
-struct GetTodosQuery;
+pub struct GetTodosQuery;
 
 pub async fn perform_my_query(
     variables: get_todos_query::Variables,
@@ -17,7 +17,7 @@ pub async fn perform_my_query(
 
     let client = reqwest::Client::new();
     let res = client
-        .post("http://127.0.0.1:4000/")
+        .post("http://127.0.0.1:4000")
         .json(&request_body)
         .send()
         .await?;
