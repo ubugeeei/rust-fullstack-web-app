@@ -42,4 +42,26 @@ impl TodoService {
             }
         }
     }
+
+    pub fn complete_todo(&self, id: i32) -> bool {
+        let complete_res = self.repository.complete(&self.connection, id);
+        match complete_res {
+            Ok(_) => true,
+            Err(e) => {
+                println!("Error completing a todo: {:?}", e);
+                false
+            }
+        }
+    }
+
+    pub fn incomplete_todo(&self, id: i32) -> bool {
+        let incomplete_res = self.repository.incomplete(&self.connection, id);
+        match incomplete_res {
+            Ok(_) => true,
+            Err(e) => {
+                println!("Error incomplete a todo: {:?}", e);
+                false
+            }
+        }
+    }
 }
