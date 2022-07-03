@@ -5,7 +5,7 @@ use actix_web::{guard, web, web::Data, App, HttpResponse, HttpServer, Result};
 
 use async_graphql::{
     http::{playground_source, GraphQLPlaygroundConfig},
-    EmptySubscription, Object, Schema,
+    EmptySubscription, Schema,
 };
 use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
 use diesel::{Connection, SqliteConnection};
@@ -13,8 +13,6 @@ use dotenv::dotenv;
 use std::env;
 pub mod schema;
 pub mod todo;
-use crate::todo::service::TodoService;
-use todo::{entities::Todo, factory::TodoFactory, repository::TodoRepository};
 
 pub fn establish_connection() -> SqliteConnection {
     dotenv().ok();
@@ -25,50 +23,22 @@ pub fn establish_connection() -> SqliteConnection {
         .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
 
+pub struct Query;
+pub struct Mutation;
+type ApiSchema = Schema<Query, Mutation, EmptySubscription>;
+
+async fn index(schema: web::Data<ApiSchema>, req: GraphQLRequest) -> GraphQLResponse {
+    schema.execute(req.into_inner()).await.into()
+}
+async fn index_playground() -> Result<HttpResponse> {
+    let source = playground_source(GraphQLPlaygroundConfig::new("/").subscription_endpoint("/"));
+    Ok(HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
+        .body(source))
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    struct Query;
-    #[Object]
-    impl Query {
-        async fn get_todos(&self) -> Vec<Todo> {
-            // TODO: share this connection with the service
-            let todo_service = TodoService::new(
-                establish_connection(),
-                TodoRepository::new(),
-                TodoFactory::new(),
-            );
-            todo_service.get_todo()
-        }
-    }
-
-    struct Mutation;
-    #[Object]
-    impl Mutation {
-        async fn create_todo(&self, title: String, description: String) -> bool {
-            // TODO: share this connection with the service
-            let todo_service = TodoService::new(
-                establish_connection(),
-                TodoRepository::new(),
-                TodoFactory::new(),
-            );
-            todo_service.create_todo(title, description)
-        }
-    }
-
-    type ApiSchema = Schema<Query, Mutation, EmptySubscription>;
-
-    async fn index(schema: web::Data<ApiSchema>, req: GraphQLRequest) -> GraphQLResponse {
-        schema.execute(req.into_inner()).await.into()
-    }
-
-    async fn index_playground() -> Result<HttpResponse> {
-        let source =
-            playground_source(GraphQLPlaygroundConfig::new("/").subscription_endpoint("/"));
-        Ok(HttpResponse::Ok()
-            .content_type("text/html; charset=utf-8")
-            .body(source))
-    }
-
     let schema = Schema::build(Query, Mutation, EmptySubscription).finish();
 
     println!("listen ...");
@@ -80,8 +50,8 @@ async fn main() -> std::io::Result<()> {
             .allowed_methods(vec!["GET", "POST"]);
 
         App::new()
-        .wrap(cors)
-        .app_data(Data::new(schema.clone()))
+            .wrap(cors)
+            .app_data(Data::new(schema.clone()))
             .service(web::resource("/").guard(guard::Post()).to(index))
             .service(web::resource("/").guard(guard::Get()).to(index_playground))
     })
