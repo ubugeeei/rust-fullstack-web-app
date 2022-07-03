@@ -1,4 +1,4 @@
-use crate::{diesel::RunQueryDsl, todo::entities::ORMTodo};
+use crate::{diesel::RunQueryDsl, root::todo::entities::ORMTodo};
 use diesel::{insert_into, prelude::*, result::Error, SqliteConnection};
 use nanoid::nanoid;
 

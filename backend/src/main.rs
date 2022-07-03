@@ -12,7 +12,7 @@ use diesel::{Connection, SqliteConnection};
 use dotenv::dotenv;
 use std::env;
 pub mod schema;
-pub mod todo;
+pub mod root;
 
 pub fn establish_connection() -> SqliteConnection {
     dotenv().ok();
