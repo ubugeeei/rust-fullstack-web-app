@@ -6,12 +6,3 @@ query GetTodosQuery {
 		isDone
 	}
 }
-
-# mutation createTodo($title: String!, $description: String!) {
-# 	createTodo(title: $title, description: $description) {
-# 		# id
-# 		title
-# 		# description
-# 		# isDone
-# 	}
-# }

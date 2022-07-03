@@ -1,0 +1,3 @@
+mutation CreateTodoMutation($title: String!, $description: String!) {
+	createTodo(title: $title, description: $description)
+}
