@@ -6,12 +6,13 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-yew = "0.19"
+yew = { version = "0.19.3" }
 reqwasm = "0.5"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 wasm-logger = "0"
-wasm-bindgen-futures = "0.4"
+web-sys = "0.3"
+wasm-bindgen-futures = { version = "0.4.31" }
 dotenv = "0.15"
 graphql_client = "0"
 reqwest = { version = "0", features = ["json"] }
