@@ -13,6 +13,7 @@ use crate::root::todo::repository::get_todos_query::{self, GetTodosQueryGetTodos
 #[function_component(App)]
 fn app() -> Html {
     let todos: UseStateHandle<Vec<GetTodosQueryGetTodos>> = use_state(|| vec![]);
+    let resync = use_state(|| false);
 
     // dialog state
     let is_opened_create_dialog = use_state(|| false);
@@ -56,6 +57,7 @@ fn app() -> Html {
         let new_title = new_title.clone();
         let new_description = new_description.clone();
         let is_opened_create_dialog = is_opened_create_dialog.clone();
+        let resync = resync.clone();
         #[allow(unused_must_use)]
         Callback::from(move |_| {
             let variables = create_todo_mutation::Variables {
@@ -66,6 +68,7 @@ fn app() -> Html {
                 TodoRepository::create(variables).await;
             });
             is_opened_create_dialog.set(false);
+            resync.set(true);
         })
     };
 
@@ -73,6 +76,8 @@ fn app() -> Html {
      * toggle complete
      */
     let toggle_complete = {
+        // let resync = resync.clone();
+        // resync.set(true);
         #[allow(unused_must_use)]
         Callback::from(move |todo: GetTodosQueryGetTodos| {
             wasm_bindgen_futures::spawn_local(async move {
@@ -86,11 +91,13 @@ fn app() -> Html {
             });
         })
     };
+
     /*
      * fetching todos
      */
     {
         let todos = todos.clone();
+        let _resync = resync.clone();
         use_effect_with_deps(
             move |_| {
                 let todos = todos.clone();
@@ -100,10 +107,11 @@ fn app() -> Html {
                         .unwrap()
                         .get_todos;
                     todos.set(res);
+                    _resync.set(false);
                 });
                 || ()
             },
-            (),
+            resync,
         );
     }
 
