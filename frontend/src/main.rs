@@ -1,4 +1,6 @@
-use root::todo::repository::{create_todo_mutation, TodoRepository};
+use root::todo::repository::{
+    complete_todo_mutation, create_todo_mutation, incomplete_todo_mutation, TodoRepository,
+};
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
@@ -54,6 +56,7 @@ fn app() -> Html {
         let new_title = new_title.clone();
         let new_description = new_description.clone();
         let is_opened_create_dialog = is_opened_create_dialog.clone();
+        #[allow(unused_must_use)]
         Callback::from(move |_| {
             let variables = create_todo_mutation::Variables {
                 title: new_title.to_string(),
@@ -66,6 +69,23 @@ fn app() -> Html {
         })
     };
 
+    /*
+     * toggle complete
+     */
+    let toggle_complete = {
+        #[allow(unused_must_use)]
+        Callback::from(move |todo: GetTodosQueryGetTodos| {
+            wasm_bindgen_futures::spawn_local(async move {
+                if todo.is_done {
+                    TodoRepository::incomplete(incomplete_todo_mutation::Variables { id: todo.id })
+                        .await;
+                } else {
+                    TodoRepository::complete(complete_todo_mutation::Variables { id: todo.id })
+                        .await;
+                }
+            });
+        })
+    };
     /*
      * fetching todos
      */
@@ -95,8 +115,8 @@ fn app() -> Html {
         <dialog open={*is_opened_create_dialog}>
         <h2>{"Create New Todos!"}</h2>
             <div>
-            <input
-            placeholder="title"
+                <input
+                    placeholder="title"
                     label="title"
                     onchange={on_change_new_title}
                     value={(*new_title).clone()}
@@ -106,7 +126,7 @@ fn app() -> Html {
                     label="description"
                     onchange={on_change_new_description}
                     value={(*new_description).clone()}
-                    />
+                />
                 </div>
                 <button type="button" onclick={close_create_dialog}>{"cancel"}</button>
                 <button type="button" onclick={create_todo}>{"create"}</button>
@@ -116,7 +136,7 @@ fn app() -> Html {
             {
                     todos.iter()
                     .map(|todo| html! {
-                    <li><TodoCard todo={todo.clone()} /></li>
+                <li key={todo.id} style="list-style: none;"><TodoCard todo={todo.clone()} oncheck={toggle_complete.clone()} /></li>
                 })
                 .collect::<Html>()
             }
