@@ -30,6 +30,20 @@ impl TodoRepository {
             .execute(connection)
     }
 
+    pub fn complete(&self, connection: &SqliteConnection, _id: i32) -> Result<usize, Error> {
+        use crate::schema::todos::dsl::*;
+        diesel::update(todos.find(_id))
+            .set(is_done.eq(true))
+            .execute(connection)
+    }
+
+    pub fn incomplete(&self, connection: &SqliteConnection, _id: i32) -> Result<usize, Error> {
+        use crate::schema::todos::dsl::*;
+        diesel::update(todos.find(_id))
+            .set(is_done.eq(false))
+            .execute(connection)
+    }
+
     pub fn select_all(&self, connection: &SqliteConnection) -> Result<Vec<ORMTodo>, Error> {
         use crate::schema::todos::dsl::*;
         todos.load::<ORMTodo>(connection)
