@@ -22,7 +22,7 @@ pub mod get_todos_query {
         #[serde(rename = "getTodos")]
         pub get_todos: Vec<GetTodosQueryGetTodos>,
     }
-    #[derive(Deserialize, PartialEq)]
+    #[derive(Deserialize, PartialEq, Clone)]
     pub struct GetTodosQueryGetTodos {
         pub id: Int,
         pub title: String,

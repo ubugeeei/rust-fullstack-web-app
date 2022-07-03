@@ -1,33 +1,32 @@
 use yew::prelude::*;
+
+mod graphql;
+
 pub mod root;
 use crate::root::todo::components::todo_card::TodoCard;
-use root::todo::entities::Todo;
+use crate::root::todo::queries::get_todos_query::{self, GetTodosQueryGetTodos};
+use root::todo::queries::perform_my_query;
 
 #[function_component(App)]
 fn app() -> Html {
-    // TODO: fetching
-    let todos: UseStateHandle<Vec<Todo>> = use_state(|| {
-        vec![
-            Todo {
-                id: 1,
-                title: "Learn Rust".to_string(),
-                description: "Learn Rust".to_string(),
-                is_done: false,
+    let todos: UseStateHandle<Vec<GetTodosQueryGetTodos>> = use_state(|| vec![]);
+    {
+        let todos = todos.clone();
+        use_effect_with_deps(
+            move |_| {
+                let todos = todos.clone();
+                wasm_bindgen_futures::spawn_local(async move {
+                    let res = perform_my_query(get_todos_query::Variables {})
+                        .await
+                        .unwrap()
+                        .get_todos;
+                    todos.set(res);
+                });
+                || ()
             },
-            Todo {
-                id: 2,
-                title: "Learn Yew".to_string(),
-                description: "Learn Yew".to_string(),
-                is_done: true,
-            },
-            Todo {
-                id: 3,
-                title: "Learn Diesel".to_string(),
-                description: "Learn Diesel".to_string(),
-                is_done: false,
-            },
-        ]
-    });
+            (),
+        );
+    }
 
     html! {
         <div>
@@ -46,5 +45,6 @@ fn app() -> Html {
 }
 
 fn main() {
+    wasm_logger::init(wasm_logger::Config::default());
     yew::start_app::<App>();
 }
