@@ -10,10 +10,10 @@ pub struct TodoCardProps {
 #[function_component(TodoCard)]
 pub fn todo_card(TodoCardProps { todo }: &TodoCardProps) -> Html {
     html! {
-        <li>
+        <div class="todo-card">
             <h2>{ todo.title.to_string()}</h2>
             <p>{ todo.description.to_string() }</p>
-            <p>{ todo.is_done.to_string() }</p>
-        </li>
+            <p>{ if todo.is_done  { "done!" } else { "yet!"}}</p>
+        </div>
     }
 }
