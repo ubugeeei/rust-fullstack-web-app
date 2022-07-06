@@ -27,14 +27,16 @@ pub fn todo_card(TodoCardProps { todo, oncheck }: &TodoCardProps) -> Html {
 
             <hr />
 
-            <p><span>{"description: "}</span>{
-                if todo.description.len() == 0 {
-                    "no description"
-                } else {
-                    &todo.description
+            <p>
+                <span>{"description: "}</span>
+                {
+                    if todo.description.len() == 0 {
+                        "no description"
+                    } else {
+                        &todo.description
+                    }
                 }
-            }</p>
-
+            </p>
         </div>
     }
 }

@@ -143,10 +143,10 @@ fn app() -> Html {
             <ul>
             {
                     todos.iter()
-                    .map(|todo| html! {
-                <li key={todo.id} style="list-style: none;"><TodoCard todo={todo.clone()} oncheck={toggle_complete.clone()} /></li>
-                })
-                .collect::<Html>()
+                        .map(|todo| html! {
+                            <li key={todo.id} style="list-style: none;"><TodoCard todo={todo.clone()} oncheck={toggle_complete.clone()} /></li>
+                        })
+                        .collect::<Html>()
             }
             </ul>
 
